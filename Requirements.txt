@@ -1,0 +1,2 @@
+openpyxl==2.3.5
+configparser==3.5.0
