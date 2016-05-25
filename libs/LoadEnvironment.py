@@ -22,20 +22,21 @@ def getEnvironment(argumentList):
 	"This fetches the environment used for execution"
 	for i in range(1,len(argumentList)):
 		if argumentList[i].lower() == "prod":
-			getEnvData("prod")
+			SHMART,username,password = getEnvData("prod")
 			envFound = True
 			break
 		elif argumentList[i].lower() == "stag":
-			getEnvData("stag")
+			SHMART,username,password = getEnvData("stag")
 			envFound = True
 			break
 		elif argumentList[i].lower() == "sandbox":
-			getEnvData("sandbox")
+			SHMART,username,password = getEnvData("sandbox")
 			envFound = True
 			break
 		envFound = False
 	if (envFound == False):
 		print "Please specify Environment like prod || stag || sandbox"
+	return SHMART,username,password
 
 def getEnvData(api_env):
 
@@ -50,7 +51,6 @@ def getEnvData(api_env):
 		username = config.get('STAGING', 'username')
 		password = config.get('STAGING', 'password')
 	elif (api_env == "prod"):
-		print ("prod")
 		SHMART = config.get('PRODUCTION', 'SHMART')
 		username = config.get('PRODUCTION', 'username')
 		password = config.get('PRODUCTION', 'password')
@@ -59,7 +59,7 @@ def getEnvData(api_env):
 		username = config.get('SANDBOX', 'username')
 		password = config.get('SANDBOX', 'password')
 
-	print SHMART,username,password
+	return SHMART,username,password
 
-if __name__ == "__main__":
-   	getEnvironment(sys.argv)
+# if __name__ == "__main__":
+#    	getEnvironment(sys.argv)
