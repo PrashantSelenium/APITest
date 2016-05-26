@@ -4,9 +4,12 @@ import sys, getopt
 import os
 import LoadEnvironment
 import ReadWriteExcel
+import ExecuteTestCase
 
-
+filename = "\TestCase Repository.xlsx"
 SHMART,username,password = LoadEnvironment.getEnvironment(sys.argv)
-print SHMART
-print username
-print password
+testcases,testsheet = ReadWriteExcel.getTotalTestCases(filename)
+for testcase in range(2, testcases + 1):
+	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
+	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
+	print responseJson
