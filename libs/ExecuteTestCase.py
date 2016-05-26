@@ -6,9 +6,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json
 import os, sys
-currentFilePath = os.path.abspath(__file__)	
-rootPath = "\\".join(currentFilePath.split("\\")[:-2])
-sys.path.append(rootPath)
+# currentFilePath = os.path.abspath(__file__)	
+# rootPath = "\\".join(currentFilePath.split("\\")[:-2])
+# sys.path.append(rootPath)
 import ReadWriteExcel 
 
 # base_url = "http://stag.shmart.in"
