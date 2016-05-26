@@ -6,7 +6,9 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json
 import os, sys
-sys.path.append("C:\\Users\\runjhuns\\APITest")
+currentFilePath = os.path.abspath(__file__)	
+rootPath = "\\".join(currentFilePath.split("\\")[:-2])
+sys.path.append(rootPath)
 import ReadWriteExcel 
 
 base_url = "http://stag.shmart.in"
