@@ -74,6 +74,3 @@ def writeIntoExcelSheet():
 	a1.font = ft
 	sheet['K' + str(row)] = str(json.dumps(responseJson))
 	wb.save('Test Repo1.xlsx')
-
-
-
