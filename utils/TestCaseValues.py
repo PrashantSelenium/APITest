@@ -1,6 +1,6 @@
 import openpyxl
 
-class TestData:
+class TestCaseValues:
 	"""Class to hold information read from each Excel Row """
 	
 	def __init__(self,sheet,row):	
@@ -14,4 +14,3 @@ class TestData:
 		self.request_body   = sheet['G' + str(row)].value
 		self.expected_response_body   = sheet['H' + str(row)].value
 		self.expected_response_code  = sheet['I' + str(row)].value
-		  
