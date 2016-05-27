@@ -21,6 +21,6 @@ def runAPI(testData,SHMART,username,password):
 	elif testData.method == "POST":
 		test_url = base_url + testData.api_url_append
 		headers = {'content-type': 'application/json'}
-		response = requests.post(test_url, auth=HTTPBasicAuth(username, password),data=json.dumps(testData.request_body),headers=headers)
+		response = requests.post(test_url, auth=HTTPBasicAuth(username, password),data=testData.request_body,headers=headers)
 		responseJson = response.json()
 	return responseJson
