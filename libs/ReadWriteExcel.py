@@ -10,28 +10,39 @@ import os, sys
 from openpyxl.styles import colors , Font, Color 
 import ExecuteTestCase
 import re
+import json
+import time
 currentFilePath = os.path.abspath(__file__)	
 rootPath = "\\".join(currentFilePath.split("\\")[:-2])
 sys.path.append(rootPath)
 from utils.TestCaseValues import TestCaseValues
 
+def getRootPath():
+	currentFilePath = os.path.abspath(__file__)	
+	rootPath = "\\".join(currentFilePath.split("\\")[:-2])
+	return rootPath
 
 def getExcelFilePath(filename):
 	# print "--finding path of the excel file----"
-	currentFilePath = os.path.abspath(__file__)	
-	rootPath = "\\".join(currentFilePath.split("\\")[:-2])
 	# print rootPath
+	rootPath = getRootPath()
 	input_file_path = rootPath+filename
 	return input_file_path
 
-def openExcelSheet(input_file_path,sheet_name):
+def openWorkbook(filename):
+	global wb
+	input_file_path = getExcelFilePath(filename)
 	wb = openpyxl.load_workbook(input_file_path)
+	return wb
+
+def openExcelSheet(wb,sheet_name):
+	print wb
 	sheet = wb.get_sheet_by_name(sheet_name)
 	return sheet
 
-def getTotalTestCases(filename):
-	input_file_path = getExcelFilePath(filename)
-	sheet = openExcelSheet(input_file_path,"TestSuite1")
+def getTotalTestCases(workbook):
+	# input_file_path = getExcelFilePath(filename)
+	sheet = openExcelSheet(workbook,"TestSuite1")
 	row = sheet.max_row
 	return row , sheet
 
@@ -56,8 +67,8 @@ def replaceData(match):
 
 def getTestCaseValuesFromExcel(variable):
 	# print variable
-	input_file_path = getExcelFilePath("\TestCase Repository.xlsx")
-	sheet = openExcelSheet(input_file_path,"TestData")
+	# input_file_path = getExcelFilePath("\TestCase Repository.xlsx")
+	sheet = openExcelSheet(wb,"TestData")
 	counter = 0
 	for column in range(1,20):
 	    column_letter = _get_column_letter(column)
@@ -68,9 +79,13 @@ def getTestCaseValuesFromExcel(variable):
 		        return "\"" + str(cell) + "\""
 		
 
-def writeIntoExcelSheet():
+def writeIntoExcelSheet(responseJson,sheet,row):
 	a1 = sheet['K' + str(row)]
 	ft = Font(color=colors.RED)
 	a1.font = ft
 	sheet['K' + str(row)] = str(json.dumps(responseJson))
-	wb.save('Test Repo1.xlsx')
+
+def saveResults(workbook,filename):
+	savelocation = getRootPath()
+	print savelocation
+	workbook.save( savelocation + '\TestExecution' + str(time.strftime("%Y%m%d-%H%M%S")) + '.xlsx')
