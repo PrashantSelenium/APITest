@@ -9,10 +9,31 @@ import json
 from jsoncompare import jsoncompare
 
 
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return sorted(ordered(x) for x in obj)
+    else:
+        return obj
+
+
+
 # Compare respecting each array's order
 def verifyResponse(expected_response,actual_response):
-	jsoncompare.are_same(json.loads(expected_response),actual_response)
+	try:
+		ordered(json.loads(expected_response)) == ordered(actual_response)
+		# json.loads(expected_response)
+		# jsoncompare.are_same(json.loads(expected_response),actual_response)
+	except ValueError:
+		print("data was not valid JSON")
+	print ("Compare Results:")	
 	print jsoncompare.are_same(json.loads(expected_response),actual_response)
+	print ("###############################################")
+	print ("###############################################")
+	print ("###############################################")
+
+
 
 # Compare ignoring the value of certain keys
 def verifyResponseIgnoring(expected_response,actual_response):
@@ -24,7 +45,7 @@ SHMART,username,password = LoadEnvironment.getEnvironment(sys.argv)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(filename)
 for testcase in range(2, testcases):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
-	print testData.expected_response_body
+	# print testData.expected_response_body
 	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
-	print responseJson
+	# print responseJson
 	verifyResponse(testData.expected_response_body,responseJson)
