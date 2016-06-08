@@ -7,6 +7,7 @@ config_folder = "\config"
 
 def getEnvironment(argumentList):
 	"This fetches the environment used for execution"
+
 	filename = sys.argv[2]
 
 	for i in range(1,len(argumentList)):

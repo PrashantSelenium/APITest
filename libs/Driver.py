@@ -69,7 +69,6 @@ SHMART,username,password,filename = LoadEnvironment.getEnvironment(sys.argv)
 filename = "\\"+filename
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
-# print testcases
 
 for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
@@ -78,5 +77,6 @@ for testcase in range(2, testcases+1):
 	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
 	# print responseJson
 	verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
+
 	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase)
 ReadWriteExcel.saveResults(workbook,filename)
