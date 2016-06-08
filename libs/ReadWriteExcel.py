@@ -12,6 +12,9 @@ import ExecuteTestCase
 import re
 import json
 import time
+from random import choice
+from string import ascii_uppercase
+
 currentFilePath = os.path.abspath(__file__)	
 rootPath = "\\".join(currentFilePath.split("\\")[:-2])
 sys.path.append(rootPath)
@@ -36,7 +39,7 @@ def openWorkbook(filename):
 	return wb
 
 def openExcelSheet(wb,sheet_name):
-	print wb
+	# print wb
 	sheet = wb.get_sheet_by_name(sheet_name)
 	return sheet
 
@@ -49,10 +52,10 @@ def getTotalTestCases(workbook):
 def readFromExcelSheet(row,sheet):
 	if (sheet['A' + str(row)].value != ""):
 		testCaseValues = TestCaseValues(sheet,row)
-		print testCaseValues.keyword
+		print testCaseValues.test
 		# print testCaseValues.request_body
 		testCaseValues.request_body = createRequestBody(testCaseValues.request_body)	
-		# print testCaseValues.request_body
+		print testCaseValues.request_body
 		return testCaseValues
 
 def createRequestBody(request):
@@ -61,9 +64,16 @@ def createRequestBody(request):
 	return request
 
 def replaceData(match):
+	# print "in replaceData"
 	match = match.group()
-	matching_value = getTestCaseValuesFromExcel(match)
-	return  matching_value
+	if match == "#random_string":
+		matching_value = getRandomSring()
+		return  "\"" + matching_value + "\""
+
+	else:
+		matching_value = getTestCaseValuesFromExcel(match)
+		# print matching_value
+		return  matching_value
 
 def getTestCaseValuesFromExcel(variable):
 	# print variable
@@ -77,13 +87,16 @@ def getTestCaseValuesFromExcel(variable):
 		        cell = sheet[column_letter + str(row+1)].value
 
 		        return "\"" + str(cell) + "\""
-		
+
+def getRandomSring():
+	return ''.join(choice(ascii_uppercase) for i in range(12))
+
 
 def writeIntoExcelSheet(responseJson,sheet,row):
 	a1 = sheet['K' + str(row)]
 	ft = Font(color=colors.RED)
 	a1.font = ft
-	sheet['K' + str(row)] = str(json.dumps(responseJson))
+	sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
 
 def saveResults(workbook,filename):
 	savelocation = getRootPath()
