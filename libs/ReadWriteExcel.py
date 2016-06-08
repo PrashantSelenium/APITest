@@ -92,11 +92,17 @@ def getRandomSring():
 	return ''.join(choice(ascii_uppercase) for i in range(12))
 
 
-def writeIntoExcelSheet(responseJson,sheet,row):
+def writeIntoExcelSheet(responseJson,sheet,row,teststatus):
 	a1 = sheet['K' + str(row)]
-	ft = Font(color=colors.RED)
+	if teststatus == False:
+		ft = Font(color=colors.RED)
+		status = "Fail"
+	else :
+		ft = Font(color=colors.BLACK)
+		status = "Pass"
 	a1.font = ft
 	sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
+	sheet['L' + str(row)] = str(json.dumps(status))
 
 def saveResults(workbook,filename):
 	savelocation = getRootPath()
