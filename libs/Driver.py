@@ -76,7 +76,7 @@ for testcase in range(2, testcases+1):
 	# print testData.method
 	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
 	# print responseJson
-	verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
+	teststatus = verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
 
-	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase)
+	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase,teststatus)
 ReadWriteExcel.saveResults(workbook,filename)
