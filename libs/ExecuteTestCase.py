@@ -16,8 +16,9 @@ import ReadWriteExcel
 def runAPI(testData,SHMART,username,password):
 	base_url = SHMART 
 	if testData.method == "GET":
-		test_url = base_url + testData.api_url_append
+		test_url = base_url + testData.api_url_append + "/" + testData.request_body
 		response = requests.get(test_url, auth=HTTPBasicAuth(username, password))
+		responseJson = response.json()
 	elif testData.method == "POST":
 		test_url = base_url + testData.api_url_append
 		headers = {'content-type': 'application/json'}
