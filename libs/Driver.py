@@ -8,8 +8,6 @@ import ExecuteTestCase
 import json
 from jsoncompare import jsoncompare
 
-
-<<<<<<< HEAD
 # def ordered(obj):
 #     if isinstance(obj, dict):
 #         return sorted((k, ordered(v)) for k, v in obj.items())
@@ -17,9 +15,6 @@ from jsoncompare import jsoncompare
 #         return sorted(ordered(x) for x in obj)
 #     else:
 #         return obj
-
-
-
 
 # Compare respecting each array's order
 def verifyResponse(expected_response,actual_response):
@@ -70,41 +65,18 @@ def verifyResponseIgnoring(expected_response,actual_response,parameter_to_ignore
 		print("data was not valid JSON")
 		return False
 
-# filename = "\TestCase Repository.xlsx"
-
 SHMART,username,password,filename = LoadEnvironment.getEnvironment(sys.argv)
-filename = "\\"+ filename
-testcases,testsheet = ReadWriteExcel.getTotalTestCases(filename)
+filename = "\\"+filename
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
-=======
-# Compare respecting each array's order
-def verifyResponse(expected_response,actual_response):
-	jsoncompare.are_same(json.loads(expected_response),actual_response)
-	print jsoncompare.are_same(json.loads(expected_response),actual_response)
+# print testcases
 
-# Compare ignoring the value of certain keys
-def verifyResponseIgnoring(expected_response,actual_response):
-	jsoncompare.are_same(a, b, False, ["datetime", "snacktime"])
-	print jsoncompare.are_same(json.loads(expected_response),actual_response)
-
-filename = "\TestCase Repository Test.xlsx"
-SHMART,username,password = LoadEnvironment.getEnvironment(sys.argv)
-# print username
-workbook = ReadWriteExcel.openWorkbook(filename)
-testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
-print testcases
->>>>>>> 768a537bfab8830ac401f7be83821eac4d50bb1f
 for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
 	print testData.expected_response_body
 	# print testData.method
 	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
-	print responseJson
-<<<<<<< HEAD
+	# print responseJson
 	verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
-=======
-	verifyResponse(testData.expected_response_body,responseJson)
->>>>>>> 768a537bfab8830ac401f7be83821eac4d50bb1f
 	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase)
 ReadWriteExcel.saveResults(workbook,filename)

@@ -7,8 +7,7 @@ config_folder = "\config"
 
 def getEnvironment(argumentList):
 	"This fetches the environment used for execution"
-	print sys.argv[0]
-	testFile = sys.argv[2]
+	filename = sys.argv[2]
 
 	for i in range(1,len(argumentList)):
 		if argumentList[i].lower() == "prod":
@@ -30,7 +29,7 @@ def getEnvironment(argumentList):
 		envFound = False
 	if (envFound == False):
 		print "Please specify Environment like prod || stag || sandbox"
-	return SHMART,username,password,testFile
+	return SHMART,username,password,filename
 
 def getEnvData(api_env):
 
