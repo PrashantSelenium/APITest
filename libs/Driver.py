@@ -69,11 +69,12 @@ def verifyResponseIgnoring(expected_response,actual_response,parameter_to_ignore
 		print("data was not valid JSON")
 		return False
 
-filename = "\TestCase Repository.xlsx"
-SHMART,username,password = LoadEnvironment.getEnvironment(sys.argv)
+# filename = "\TestCase Repository.xlsx"
+SHMART,username,password,filename = LoadEnvironment.getEnvironment(sys.argv)
+filename = "\\"+filename
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
-for testcase in range(2, testcases+1):
+for testcase in range(2, testcases):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
 	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
 	verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
