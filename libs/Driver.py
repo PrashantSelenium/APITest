@@ -78,22 +78,6 @@ testcases,testsheet = ReadWriteExcel.getTotalTestCases(filename)
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
 =======
-# Compare respecting each array's order
-def verifyResponse(expected_response,actual_response):
-	jsoncompare.are_same(json.loads(expected_response),actual_response)
-	print jsoncompare.are_same(json.loads(expected_response),actual_response)
-
-# Compare ignoring the value of certain keys
-def verifyResponseIgnoring(expected_response,actual_response):
-	jsoncompare.are_same(a, b, False, ["datetime", "snacktime"])
-	print jsoncompare.are_same(json.loads(expected_response),actual_response)
-
-filename = "\TestCase Repository Test.xlsx"
-SHMART,username,password = LoadEnvironment.getEnvironment(sys.argv)
-# print username
-workbook = ReadWriteExcel.openWorkbook(filename)
-testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
-print testcases
 >>>>>>> 768a537bfab8830ac401f7be83821eac4d50bb1f
 for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
@@ -104,7 +88,6 @@ for testcase in range(2, testcases+1):
 <<<<<<< HEAD
 	verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
 =======
-	verifyResponse(testData.expected_response_body,responseJson)
 >>>>>>> 768a537bfab8830ac401f7be83821eac4d50bb1f
 	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase)
 ReadWriteExcel.saveResults(workbook,filename)
