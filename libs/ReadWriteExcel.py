@@ -55,7 +55,7 @@ def readFromExcelSheet(row,sheet):
 		print testCaseValues.test
 		# print testCaseValues.request_body
 		testCaseValues.request_body = createRequestBody(testCaseValues.request_body)	
-		print testCaseValues.request_body
+		# print testCaseValues.request_body
 		return testCaseValues
 
 def createRequestBody(request):

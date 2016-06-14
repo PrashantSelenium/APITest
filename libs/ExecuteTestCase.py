@@ -33,4 +33,4 @@ def runAPI(testData,SHMART,username,password):
 		response = requests.post(test_url, auth=HTTPBasicAuth(username, password),data=testData.request_body,headers=headers)
 		print response
 		responseJson = response.json()
-	return responseJson
+	return responseJson , response
