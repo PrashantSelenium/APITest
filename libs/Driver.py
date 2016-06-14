@@ -74,7 +74,11 @@ for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
 	print testData.expected_response_body
 	# print testData.method
-	responseJson = ExecuteTestCase.runAPI(testData,SHMART,username,password)
+	try:
+		responseJson , response_code = ExecuteTestCase.runAPI(testData,SHMART,username,password)
+	except Exception:
+		responseJson = "Unexpected Error with response code" + str(response_code) + "\n" + "Response :" + str(responseJson)
+		pass
 	# print responseJson
 	teststatus = verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
 
