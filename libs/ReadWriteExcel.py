@@ -94,12 +94,13 @@ def getRandomSring():
 
 def writeIntoExcelSheet(responseJson,sheet,row,teststatus):
 	a1 = sheet['K' + str(row)]
-	if teststatus == False:
-		ft = Font(color=colors.RED)
-		status = "Fail"
-	else :
+	if teststatus:
 		ft = Font(color=colors.BLACK)
 		status = "Pass"
+	else :
+		ft = Font(color=colors.RED)
+		status = "Fail"
+		
 	a1.font = ft
 	sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
 	sheet['L' + str(row)] = str(json.dumps(status))
