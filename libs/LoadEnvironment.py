@@ -16,7 +16,7 @@ def getEnvironment(argumentList):
 			envFound = True
 			break
 		elif argumentList[i].lower() == "stag":
-			SHMART,username,password = getEnvData("stag")
+			SHMART,username,password,agent = getEnvData("stag")
 			envFound = True
 			break
 		elif argumentList[i].lower() == "qa":
@@ -30,7 +30,7 @@ def getEnvironment(argumentList):
 		envFound = False
 	if (envFound == False):
 		print "Please specify Environment like prod || stag || sandbox"
-	return SHMART,username,password,filename
+	return SHMART,username,password,agent,filename
 
 def getEnvData(api_env):
 
@@ -44,6 +44,7 @@ def getEnvData(api_env):
 		SHMART = config.get('STAGING', 'SHMART')
 		username = config.get('STAGING', 'username')
 		password = config.get('STAGING', 'password')
+		agent = config.get('STAGING', 'AGENT')
 	elif (api_env == "prod"):
 		SHMART = config.get('PRODUCTION', 'SHMART')
 		username = config.get('PRODUCTION', 'username')
@@ -53,4 +54,4 @@ def getEnvData(api_env):
 		username = config.get('SANDBOX', 'username')
 		password = config.get('SANDBOX', 'password')
 
-	return SHMART,username,password
+	return SHMART,username,password,agent
