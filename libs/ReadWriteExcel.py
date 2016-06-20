@@ -7,13 +7,15 @@ import openpyxl.cell
 from openpyxl.utils import (_get_column_letter)
 
 import os, sys
-from openpyxl.styles import colors , Font, Color 
+from openpyxl.styles import colors , Font, Color , Style
+from openpyxl.styles import Alignment
 import ExecuteTestCase
 import re
 import json
 import time
 from random import choice
 from string import ascii_uppercase
+from bs4 import BeautifulSoup
 
 currentFilePath = os.path.abspath(__file__)	
 rootPath = "\\".join(currentFilePath.split("\\")[:-2])
@@ -92,7 +94,7 @@ def getRandomSring():
 	return ''.join(choice(ascii_uppercase) for i in range(12))
 
 
-def writeIntoExcelSheet(responseJson,sheet,row,teststatus):
+def writeIntoExcelSheet(responseJson,sheet,row,teststatus,api_type):
 	a1 = sheet['K' + str(row)]
 	if teststatus:
 		ft = Font(color=colors.BLACK)
@@ -102,8 +104,13 @@ def writeIntoExcelSheet(responseJson,sheet,row,teststatus):
 		status = "Fail"
 		
 	a1.font = ft
-	sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
-	sheet['L' + str(row)] = str(json.dumps(status))
+	if api_type:
+		sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
+		sheet['L' + str(row)] = str(json.dumps(status))
+	else :
+		sheet['K' + str(row)].alignment = Alignment(wrapText=True)
+		sheet['K' + str(row)] = BeautifulSoup(responseJson, "xml").prettify()
+		sheet['L' + str(row)] = str(json.dumps(status))
 
 def saveResults(workbook,filename):
 	savelocation = getRootPath()

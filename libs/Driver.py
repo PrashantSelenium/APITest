@@ -65,22 +65,33 @@ def verifyResponseIgnoring(expected_response,actual_response,parameter_to_ignore
 		print("data was not valid JSON")
 		return False
 
-SHMART,username,password,filename = LoadEnvironment.getEnvironment(sys.argv)
+SHMART,username,password,AGENT,filename = LoadEnvironment.getEnvironment(sys.argv)
 filename = "\\"+filename
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
 
 for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
-	print testData.expected_response_body
+	print "In Driver -----" + testData.expected_response_body
 	# print testData.method
 	try:
-		responseJson , response_code = ExecuteTestCase.runAPI(testData,SHMART,username,password)
+		responseJson , response_code , api_type = ExecuteTestCase.runAPI(testData,SHMART,username,password,AGENT)
+		print "In Driver after Execute "  + responseJson
 	except Exception:
 		responseJson = "Unexpected Error with response code" + str(response_code) + "\n" + "Response :" + str(responseJson)
 		pass
 	# print responseJson
-	teststatus = verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
+	print api_type
+	if api_type:
+		print "in REST API Compare"
+		teststatus = verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
+	else :
+		print "in SOAP API Compare"
+		if (responseJson == testData.expected_response_body):
+			teststatus = 1
+		else:
+			teststatus = 0
 
-	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase,teststatus)
+
+	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase,teststatus,api_type)
 ReadWriteExcel.saveResults(workbook,filename)
