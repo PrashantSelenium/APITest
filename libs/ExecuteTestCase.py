@@ -38,8 +38,14 @@ def runAPI(testData,SHMART,username,password,AGENT):
 		headers = {'content-type': 'application/json'}
 		test_url = test_url.strip()
 		response = requests.post(test_url, auth=HTTPBasicAuth(username, password),data=testData.request_body,headers=headers)
-		print response
-		responseJson = response.json()
+		print ":::::" + str(response.status_code)
+		
+		if response.status_code == 500:
+			print response.content
+			responseJson = response.content
+		else:
+			responseJson = response.json()
+		# print "In Post Method" + response.json()
 		return responseJson , response , api_is_rest
 	elif testData.method == "SOAP":
 		print " in SOAP"
@@ -49,8 +55,8 @@ def runAPI(testData,SHMART,username,password,AGENT):
 		headers = {'content-type': 'application/soap+xml'}
 		response = requests.post(test_url,data=testData.request_body,headers=headers)
 		soapresponse = response.text
-		print "In Execute ---" + soapresponse
-		print response
+		# print "In Execute ---" + soapresponse
+		# print response
 		response = response.status_code 
 		# xml = xml.dom.minidom.parse(soapresponse) # or xml.dom.minidom.parseString(xml_string)
 		# pretty_xml_as_string = xml.toprettyxml()

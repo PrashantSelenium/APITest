@@ -6,7 +6,18 @@ import LoadEnvironment
 import ReadWriteExcel
 import ExecuteTestCase
 import json
+import requests
 from jsoncompare import jsoncompare
+import lxml.etree
+from xml_diff import compare
+from xml.etree.ElementTree import fromstring
+from xml.etree import ElementTree as etree
+import xml.etree.cElementTree as ET
+import filecmp
+from pprint import pprint
+import xmltodict
+from xml.etree.ElementTree import XML, fromstring, tostring
+
 
 # def ordered(obj):
 #     if isinstance(obj, dict):
@@ -69,17 +80,24 @@ SHMART,username,password,AGENT,filename = LoadEnvironment.getEnvironment(sys.arg
 filename = "\\"+filename
 workbook = ReadWriteExcel.openWorkbook(filename)
 testcases,testsheet = ReadWriteExcel.getTotalTestCases(workbook)
+print testcases
 
 for testcase in range(2, testcases+1):
 	testData = ReadWriteExcel.readFromExcelSheet(testcase,testsheet)
-	print "In Driver -----" + testData.expected_response_body
+	print "In Driver -----" 
+	# + testData.expected_response_body
 	# print testData.method
 	try:
 		responseJson , response_code , api_type = ExecuteTestCase.runAPI(testData,SHMART,username,password,AGENT)
-		print "In Driver after Execute "  + responseJson
-	except Exception:
-		responseJson = "Unexpected Error with response code" + str(response_code) + "\n" + "Response :" + str(responseJson)
-		pass
+		print "In Driver after Execute "  + str(responseJson)
+		print "In driver after execute response_code" + str(response_code)
+	except requests.exceptions.HTTPError as e:
+		responseJson =  "Error: " + str(e)
+	# except Exception:
+	# 	response_code = 500
+	# 	# print "In driver after execute response_code" + str(response_code)
+	# 	responseJson = "Unexpected Error with response code" + str(response_code) + "\n" + "Response :" + str(responseJson)
+	# 	pass
 	# print responseJson
 	print api_type
 	if api_type:
@@ -87,10 +105,23 @@ for testcase in range(2, testcases+1):
 		teststatus = verifyResponseIgnoring(testData.expected_response_body,responseJson, testData.parameter_to_ignore)
 	else :
 		print "in SOAP API Compare"
-		if (responseJson == testData.expected_response_body):
-			teststatus = 1
-		else:
-			teststatus = 0
+		root = etree.fromstring(responseJson)
+		x1 = etree.tostring(root)
+		doc1 = xmltodict.parse(x1)
+		root2 = etree.fromstring(testData.expected_response_body)
+		x2 = etree.tostring(root2)
+		doc2 = xmltodict.parse(x2)
+		# print json.dumps(doc2)
+		teststatus = verifyResponseIgnoring(json.dumps(doc1),json.loads(json.dumps(doc2)), testData.parameter_to_ignore)
+		if (testData.parameter_to_write != ""):
+			value_to_write = ReadWriteExcel.fetchValuesToWritefromResponse(doc1)
+			# ReadWriteExcel.writeintoexcelTestData(filename,testData.parameter_to_write,value_to_write)
+		# diff  = 0
+
+		# if diff:
+		# 	teststatus = 0
+		# else:
+		# 	teststatus = 1
 
 
 	ReadWriteExcel.writeIntoExcelSheet(responseJson,testsheet,testcase,teststatus,api_type)
