@@ -165,4 +165,4 @@ def fetchValuesToWritefromResponse(response):
 def saveResults(workbook,filename):
 	savelocation = getRootPath()
 	print savelocation
-workbook.save( savelocation + '\TestExecution' + str(time.strftime("%Y%m%d-%H%M%S")) + '.xlsx')
+	workbook.save( savelocation + '\TestExecution' + str(time.strftime("%Y%m%d-%H%M%S")) + '.xlsx')

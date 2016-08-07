@@ -64,4 +64,5 @@ def getEnvData(api_env):
 		username = config.get('UAT', 'username')
 		password = config.get('UAT', 'password')
 		agent = config.get('UAT', 'AGENT')
-return SHMART,username,password,agent
+
+	return SHMART,username,password,agent

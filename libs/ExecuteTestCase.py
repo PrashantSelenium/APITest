@@ -69,4 +69,4 @@ def runAPI(testData,SHMART,username,password,AGENT):
 		# reparsed = minidom.parseString(rough_string)
 		# print  reparsed.toprettyxml(indent="\t")
 
-return soapresponse , response , api_is_rest
+	return soapresponse , response , api_is_rest
