@@ -16,6 +16,10 @@ import time
 from random import choice
 from string import ascii_uppercase
 from bs4 import BeautifulSoup
+from collections import namedtuple
+from argparse import Namespace
+
+# global method
 
 currentFilePath = os.path.abspath(__file__)	
 rootPath = "\\".join(currentFilePath.split("\\")[:-2])
@@ -57,7 +61,9 @@ def readFromExcelSheet(row,sheet):
 		print testCaseValues.test
 		# print testCaseValues.request_body
 		testCaseValues.request_body = createRequestBody(testCaseValues.request_body)	
-		# print testCaseValues.request_body
+		global method
+		method = testCaseValues.method
+		print "after random generator"  + testCaseValues.request_body
 		return testCaseValues
 
 def createRequestBody(request):
@@ -70,6 +76,10 @@ def replaceData(match):
 	match = match.group()
 	if match == "#random_string":
 		matching_value = getRandomSring()
+		print matching_value
+		# if (method == "SOAP"):
+		# 	return   matching_value 
+		# else:
 		return  "\"" + matching_value + "\""
 
 	else:
@@ -88,14 +98,18 @@ def getTestCaseValuesFromExcel(variable):
 	        if sheet[column_letter + str(row)].value == variable:
 		        cell = sheet[column_letter + str(row+1)].value
 
-		        return "\"" + str(cell) + "\""
+		        if (method == "SOAP"):
+		        	return   str(cell) 
+		        else:
+		        	return "\"" + str(cell) + "\""
 
 def getRandomSring():
+	print "in random string"
 	return ''.join(choice(ascii_uppercase) for i in range(12))
 
 
 def writeIntoExcelSheet(responseJson,sheet,row,teststatus,api_type):
-	a1 = sheet['K' + str(row)]
+	a1 = sheet['L' + str(row)]
 	if teststatus:
 		ft = Font(color=colors.BLACK)
 		status = "Pass"
@@ -105,12 +119,48 @@ def writeIntoExcelSheet(responseJson,sheet,row,teststatus,api_type):
 		
 	a1.font = ft
 	if api_type:
-		sheet['K' + str(row)] = str(json.dumps(responseJson, indent=4))
-		sheet['L' + str(row)] = str(json.dumps(status))
+		sheet['L' + str(row)].alignment = Alignment(wrapText=True)
+		sheet['L' + str(row)] = str(json.dumps(responseJson, indent=4))
+		sheet['M' + str(row)] = str(json.dumps(status))
 	else :
-		sheet['K' + str(row)].alignment = Alignment(wrapText=True)
-		sheet['K' + str(row)] = BeautifulSoup(responseJson, "xml").prettify()
-		sheet['L' + str(row)] = str(json.dumps(status))
+		sheet['L' + str(row)].alignment = Alignment(wrapText=True)
+		sheet['L' + str(row)] = BeautifulSoup(responseJson, "xml").prettify()
+		sheet['M' + str(row)] = str(json.dumps(status))
+
+# def writeintoexcelTestData(filename,variable):
+# 	wrkbk = openWorkbook(filename)
+# 	print " in writeintoexcelTestData"
+# 	sheet = openExcelSheet(wrkbk,"TestData")
+# 	counter = 0
+# 	cell = 1234
+# 	print method	
+# 	for column in range(1,20):
+		
+# 	    column_letter = _get_column_letter(column)
+	   
+# 	    for row in range(1,sheet.max_row+1):
+# 	    	print "in for  loop"
+# 	    	print sheet[column_letter + str(row)].value
+# 	    	print variable
+# 	        if sheet[column_letter + str(row)].value == variable:
+# 	        	print " first if"
+		        
+# 		        if (method == "SOAP"):
+# 		        	print "in SOAP"
+# 		        	# sheet['A2'].value = "Testing"
+# 		        	sheet[column_letter + str(row+1)].value  = cell
+# 		        	savelocation = getRootPath()
+# 		        	print "saving the file"
+# 		        	wrkbk.save(savelocation + filename)
+# 		        else:
+# 		        	sheet[column_letter + str(row+1)].value  = "\"" + cell + "\""
+				
+# 		return
+
+def fetchValuesToWritefromResponse(response):
+	print "in fetchValuesToWritefromResponse"
+	# print response
+	print response['ns0:Envelope']['ns0:Body']['ns1:LoginResponse']['return']['ResponseMessage']
 
 def saveResults(workbook,filename):
 	savelocation = getRootPath()

@@ -6,3 +6,5 @@ jsoncompare==0.1.2
 lxml==3.6.0
 pytidylib==0.2.4
 bs4==0.0.1
+xml-diff==0.7.0
+xmltodict==0.10.2

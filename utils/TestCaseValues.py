@@ -15,3 +15,4 @@ class TestCaseValues:
 		self.expected_response_body   = sheet['H' + str(row)].value
 		self.expected_response_code  = sheet['I' + str(row)].value
 		self.parameter_to_ignore = sheet['J' + str(row)].value
+		self.parameter_to_write = sheet['K' + str(row)].value
